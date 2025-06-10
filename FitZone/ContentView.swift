@@ -1,88 +1,106 @@
-//
-//  ContentView.swift
-//  FitZone
-//
-//  Created by User on 09/06/2025.
-//
-
 import SwiftUI
-import CoreData
+import HealthKit
 
 struct ContentView: View {
-    @Environment(\.managedObjectContext) private var viewContext
+    @State private var isAuthorized = false
+    @State private var workouts: [HKWorkout] = []
+    @State private var totalCalories: Double = 0
 
-    @FetchRequest(
-        sortDescriptors: [NSSortDescriptor(keyPath: \Item.timestamp, ascending: true)],
-        animation: .default)
-    private var items: FetchedResults<Item>
+    let healthStore = HKHealthStore()
 
     var body: some View {
-        NavigationView {
-            List {
-                ForEach(items) { item in
-                    NavigationLink {
-                        Text("Item at \(item.timestamp!, formatter: itemFormatter)")
-                    } label: {
-                        Text(item.timestamp!, formatter: itemFormatter)
+        NavigationStack {
+            VStack {
+                if isAuthorized {
+                    List {
+                        Section(header: Text("Workouts")) {
+                            ForEach(workouts, id: \.uuid) { workout in
+                                VStack(alignment: .leading) {
+                                    Text(workout.workoutActivityType.name)
+                                        .font(.headline)
+                                    Text("Duration: \(Int(workout.duration / 60)) mins")
+                                    Text("Calories: \(Int(workout.totalEnergyBurned?.doubleValue(for: .kilocalorie()) ?? 0)) kcal")
+                                }
+                                .padding(.vertical, 4)
+                            }
+                        }
+
+                        Section {
+                            Text("Total Calories Burned per body: \(Int(totalCalories)) kcal")
+                                .font(.title2)
+                                .bold()
+                        }
                     }
-                }
-                .onDelete(perform: deleteItems)
-            }
-            .toolbar {
-#if os(iOS)
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    EditButton()
-                }
-#endif
-                ToolbarItem {
-                    Button(action: addItem) {
-                        Label("Add Item", systemImage: "plus")
+                } else {
+                    Button("Authorize HealthK_it") {
+                        requestHealthKitPermission()
                     }
+                    .padding()
                 }
             }
-            Text("Select an item")
+            .navigationTitle("FitZone Tracker")
         }
-    }
-
-    private func addItem() {
-        withAnimation {
-            let newItem = Item(context: viewContext)
-            newItem.timestamp = Date()
-
-            do {
-                try viewContext.save()
-            } catch {
-                // Replace this implementation with code to handle the error appropriately.
-                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-                let nsError = error as NSError
-                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+        .onAppear {
+            if HKHealthStore.isHealthDataAvailable() {
+                requestHealthKitPermission()
             }
         }
     }
 
-    private func deleteItems(offsets: IndexSet) {
-        withAnimation {
-            offsets.map { items[$0] }.forEach(viewContext.delete)
+    func requestHealthKitPermission() {
+        let typesToShare: Set = [
+            HKObjectType.workoutType()
+        ]
 
-            do {
-                try viewContext.save()
-            } catch {
-                // Replace this implementation with code to handle the error appropriately.
-                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-                let nsError = error as NSError
-                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+        let typesToRead: Set = [
+            HKObjectType.workoutType(),
+            HKObjectType.quantityType(forIdentifier: .activeEnergyBurned)!
+        ]
+
+        healthStore.requestAuthorization(toShare: typesToShare, read: typesToRead) { success, error in
+            if success {
+                isAuthorized = true
+                fetchWorkouts()
+            } else {
+                print("HealthKit authorization failed: \(error?.localizedDescription ?? "Unknown error")")
             }
         }
+    }
+
+    func fetchWorkouts() {
+        let sort = NSSortDescriptor(key: HKSampleSortIdentifierEndDate, ascending: false)
+        let workoutQuery = HKSampleQuery(
+            sampleType: HKObjectType.workoutType(),
+            predicate: nil,
+            limit: 10,
+            sortDescriptors: [sort]
+        ) { _, samples, _ in
+            guard let workouts = samples as? [HKWorkout] else { return }
+
+            DispatchQueue.main.async {
+                self.workouts = workouts
+                self.totalCalories = workouts.reduce(0) {
+                    $0 + ($1.totalEnergyBurned?.doubleValue(for: .kilocalorie()) ?? 0)
+                }
+            }
+        }
+
+        healthStore.execute(workoutQuery)
     }
 }
 
-private let itemFormatter: DateFormatter = {
-    let formatter = DateFormatter()
-    formatter.dateStyle = .short
-    formatter.timeStyle = .medium
-    return formatter
-}()
-
-#Preview {
-    ContentView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+// MARK: - Extension for Workout Name
+extension HKWorkoutActivityType {
+    var name: String {
+        switch self {
+        case .running: return "Running"
+        case .cycling: return "Cycling"
+        case .walking: return "Walking"
+        case .functionalStrengthTraining: return "Strength Training"
+        case .traditionalStrengthTraining: return "Weight Lifting"
+        case .elliptical: return "Elliptical"
+        case .swimming: return "Swimming"
+        default: return "Other"
+        }
+    }
 }
