@@ -26,7 +26,7 @@ struct ContentView: View {
                         }
 
                         Section {
-                            Text("Total Calories Burned per body: \(Int(totalCalories)) kcal")
+                            Text("Total Calories Burned per body in kcal: \(Int(totalCalories)) kcal")
                                 .font(.title2)
                                 .bold()
                         }
