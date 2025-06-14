@@ -12,8 +12,8 @@ struct ContentView: View {
         NavigationStack {
             VStack {
                 if isAuthorized {
-                    List {
-                        Section(header: Text("Workouts there")) {
+                    List {//List of all workouts there 
+                        Section(header: Text("Workouts---there")) {
                             ForEach(workouts, id: \.uuid) { workout in
                                 VStack(alignment: .leading) {
                                     Text(workout.workoutActivityType.name)
