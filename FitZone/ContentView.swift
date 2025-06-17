@@ -12,7 +12,7 @@ struct ContentView: View {
         NavigationStack {
             VStack {
                 if isAuthorized {
-                    List {//List of all workouts there 
+                    List {//List of all workouts there
                         Section(header: Text("Workouts---there")) {
                             ForEach(workouts, id: \.uuid) { workout in
                                 VStack(alignment: .leading) {
@@ -26,7 +26,7 @@ struct ContentView: View {
                         }
 
                         Section {
-                            Text("Total Calories Burned per body in kcal: \(Int(totalCalories)) kcal")
+                            Text("Total Calories Burned per body in kcal--: \(Int(totalCalories)) kcal")
                                 .font(.title2)
                                 .bold()
                         }
