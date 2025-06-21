@@ -26,7 +26,7 @@ struct ContentView: View {
                         }
 
                         Section {
-                            Text("Total Calories Burned per body in kcal--: \(Int(totalCalories)) kcal")
+                            Text("Totals Calories Burned per body in kcal--: \(Int(totalCalories)) kcal")
                                 .font(.title2)
                                 .bold()
                         }
@@ -62,7 +62,7 @@ struct ContentView: View {
                 isAuthorized = true
                 fetchWorkouts()
             } else {
-                print("HealthKit authorization failed (due to low blood pressure--) : \(error?.localizedDescription ?? "Unknown error")")
+                print("HealthKit authorization failed (due to low blood pressure--)  : \(error?.localizedDescription ?? "Unknown error")")
             }
         }
     }
