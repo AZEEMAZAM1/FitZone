@@ -13,13 +13,13 @@ struct ContentView: View {
             VStack {
                 if isAuthorized {
                     List {//List of all workouts there
-                        Section(header: Text("Workouts---there")) {
+                        Section(header: Text("-Workouts---there")) {
                             ForEach(workouts, id: \.uuid) { workout in
                                 VStack(alignment: .leading) {
                                     Text(workout.workoutActivityType.name)
                                         .font(.headline)
-                                    Text("Duration--: \(Int(workout.duration / 60)) mins")
-                                    Text("Calories--: \(Int(workout.totalEnergyBurned?.doubleValue(for: .kilocalorie()) ?? 0)) kcal")
+                                    Text("-Duration--: \(Int(workout.duration / 60)) mins")
+                                    Text("-Calories--: \(Int(workout.totalEnergyBurned?.doubleValue(for: .kilocalorie()) ?? 0)) kcal")
                                 }
                                 .padding(.vertical, 4)
                             }
