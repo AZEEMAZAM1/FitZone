@@ -62,7 +62,7 @@ struct ContentView: View {
                 isAuthorized = true
                 fetchWorkouts()
             } else {
-                print("HealthKit authorization failed (due to low blood pressure__)  : \(error?.localizedDescription ?? "Unknown error")")
+                print("HealthKit authorization failed (due to low blood pressure__ds)  : \(error?.localizedDescription ?? "Unknown error")")
             }
         }
     }
@@ -99,7 +99,7 @@ extension HKWorkoutActivityType {
         case .functionalStrengthTraining: return "Strength Training"
         case .traditionalStrengthTraining: return "Weight Lifting"
         case .elliptical: return "Elliptical"
-        case .swimming: return "Swimming"
+        case .swimming: return "Swimming_"
         default: return "Other"
         }
     }
