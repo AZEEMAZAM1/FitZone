@@ -100,7 +100,7 @@ extension HKWorkoutActivityType {
         case .traditionalStrengthTraining: return "-Weight Lifting-"
         case .elliptical: return "-Elliptical"
         case .swimming: return "Swimming_"
-        default: return "Other-"
+        default: return "-Other-"
         }
     }
 }
