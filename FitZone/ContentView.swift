@@ -62,7 +62,7 @@ struct ContentView: View {
                 isAuthorized = true
                 fetchWorkouts()
             } else {
-                print("HealthKit authorization failed (due to low blood pressure__ds)  : \(error?.localizedDescription ?? "Unknown error")")
+                print("-HealthKit authorization failed (due to low blood pressure__ds)  : \(error?.localizedDescription ?? "Unknown error")")
             }
         }
     }
