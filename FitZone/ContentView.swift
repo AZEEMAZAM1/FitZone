@@ -38,7 +38,7 @@ struct ContentView: View {
                     .padding()
                 }
             }
-            .navigationTitle("-FitZone Tracker--")
+            .navigationTitle("-FitZone_Tracker--")
         }
         .onAppear {
             if HKHealthStore.isHealthDataAvailable() {
