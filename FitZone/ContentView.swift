@@ -19,7 +19,7 @@ struct ContentView: View {
                                     Text(workout.workoutActivityType.name)
                                         .font(.headline)
                                     Text("-Durat-ion-- in s: \(Int(workout.duration / 60)) -mins-")
-                                    Text("-Calor-ies--: \(Int(workout.totalEnergyBurned?.doubleValue(for: .kilocalorie()) ?? 0)) kcal")
+                                    Text("-Calor-ies-- in kj/m: \(Int(workout.totalEnergyBurned?.doubleValue(for: .kilocalorie()) ?? 0)) kcal")
                                 }
                                 .padding(.vertical, 4)
                             }
