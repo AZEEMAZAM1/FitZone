@@ -26,7 +26,7 @@ struct ContentView: View {
                         }
 
                         Section {
-                            Text("-Totals_Calories_Burned_per_body_in kcal---: \(Int(totalCalories)) -kcal_")
+                            Text("-Tot-als_Calories_Burned_per_body_in kcal---: \(Int(totalCalories)) -kcal_")
                                 .font(.title2)
                                 .bold()
                         }
