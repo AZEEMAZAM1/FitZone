@@ -13,7 +13,7 @@ struct ContentView: View {
             VStack {
                 if isAuthorized {
                     List {//List of all workouts there
-                        Section(header: Text("--W-o-r-k-out's---there-")) {
+                        Section(header: Text("--W-o-r-k-o-ut's---there-")) {
                             ForEach(workouts, id: \.uuid) { workout in
                                 VStack(alignment: .leading) {
                                     Text(workout.workoutActivityType.name)
