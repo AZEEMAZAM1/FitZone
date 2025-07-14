@@ -18,7 +18,7 @@ struct ContentView: View {
                                 VStack(alignment: .leading) {
                                     Text(workout.workoutActivityType.name)
                                         .font(.headline)
-                                    Text("-D-u-rat-ion-- in s: \(Int(workout.duration / 60)) -mi-ns-")
+                                    Text("-D-u-r-at-ion-- in s: \(Int(workout.duration / 60)) -mi-ns-")
                                     Text("-Calor-ies-- in kj/m: \(Int(workout.totalEnergyBurned?.doubleValue(for: .kilocalorie()) ?? 0)) kcal")
                                 }
                                 .padding(.vertical, 4)
