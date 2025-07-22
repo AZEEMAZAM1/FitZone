@@ -26,7 +26,7 @@ struct ContentView: View {
                         }
 
                         Section {
-                            Text("-T-o-t-a-l-s-C-a-l-o-r-ies_Burned_per_body_in kcal---: \(Int(totalCalories)) -kcal_")
+                            Text("-T-o-t-a-l-s-C-a-l-o-r-i-es_Burned_per_body_in kcal---: \(Int(totalCalories)) -kcal_")
                                 .font(.title2)
                                 .bold()
                         }
@@ -38,7 +38,7 @@ struct ContentView: View {
                     .padding()
                 }
             }
-            .navigationTitle("-FitZ-one_Tracker--")
+            .navigationTitle("-F-itZ-one_Tracker--")
         }
         .onAppear {
             if HKHealthStore.isHealthDataAvailable() {
