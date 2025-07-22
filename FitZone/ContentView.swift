@@ -38,7 +38,7 @@ struct ContentView: View {
                     .padding()
                 }
             }
-            .navigationTitle("-F-i-t-Z-o-n-e_T-r-acker--")
+            .navigationTitle("-F-i-t-Z-o-n-e_T-r-ac-ker--")
         }
         .onAppear {
             if HKHealthStore.isHealthDataAvailable() {
