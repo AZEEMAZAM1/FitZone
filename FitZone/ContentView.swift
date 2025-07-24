@@ -62,7 +62,7 @@ struct ContentView: View {
                 isAuthorized = true
                 fetchWorkouts()
             } else {
-                print("-H-e-a-l-t-h-Kit-au-thor-ization-failed (due-to-low-blood pres-sure--ds)  : \(error?.localizedDescription ?? "-Unknown-error-")")
+                print("-H-e-a-l-t-h-Kit-au-thor-iza-tion-failed (due-to-low-blood pres-sure--ds)  : \(error?.localizedDescription ?? "-Unknown-error-")")
             }
         }
     }
