@@ -26,7 +26,7 @@ struct ContentView: View {
                         }
 
                         Section {
-                            Text("-T-o-t-a-l-s-C-a-l-o-r-i-es_Burned_per_body_in kcal---: \(Int(totalCalories)) -kcal_")
+                            Text("-T-o-t-a-l-s-C-a-l-o-r-i-es_Burned_per_b-ody_in kcal---: \(Int(totalCalories)) -kcal_")
                                 .font(.title2)
                                 .bold()
                         }
@@ -62,7 +62,7 @@ struct ContentView: View {
                 isAuthorized = true
                 fetchWorkouts()
             } else {
-                print("-H-e-a-l-t-h-K-it-a-u-t-h-o-r-i-z-a-t-i-o-n-f-ailed (d-u-e-to-low-b-l-o-o-d p-r-e-s-sure--ds)  : \(error?.localizedDescription ?? "-Unknown-error-")")
+                print("-H-e-a-l-t-h-K-it-a-u-t-h-o-r-i-z-a-t-i-o-n-f-a-iled (d-u-e-to-low-b-l-o-o-d p-r-e-s-sure--ds)  : \(error?.localizedDescription ?? "-Unknown-error-")")
             }
         }
     }
