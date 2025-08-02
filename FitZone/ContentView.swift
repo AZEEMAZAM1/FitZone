@@ -32,7 +32,7 @@ struct ContentView: View {
                         }
                     }
                 } else {
-                    Button("-A-u-t-h-ori__ze HealthK_it__") {
+                    Button("-A-u-t-h-o-ri__ze HealthK_it__") {
                         requestHealthKitPermission()
                     }
                     .padding()
