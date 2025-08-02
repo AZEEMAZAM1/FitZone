@@ -93,7 +93,7 @@ struct ContentView: View {
 extension HKWorkoutActivityType {
     var name: String {
         switch self {
-        case .running: return "-R-u-n-n-i-ng-"
+        case .running: return "-R-u-n-n-i-n-g-"
         case .cycling: return "-C-ycIl-ing-"
         case .walking: return "---lk-ing-"
         case .functionalStrengthTraining: return "-St-rength_Training-"
