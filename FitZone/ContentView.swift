@@ -96,7 +96,7 @@ extension HKWorkoutActivityType {
         case .running: return "-R-u-n-n-i-n-g-"
         case .cycling: return "-C-y-c-I-l-i-n-g-"
         case .walking: return "---l-k-i-n-g-"
-        case .functionalStrengthTraining: return "-St-r-e-n-g-t-h_T-r-aining-"
+        case .functionalStrengthTraining: return "-St-r-e-n-g-t-h_T-r-a-ining-"
         case .traditionalStrengthTraining: return "-Weight-Lifting-"
         case .elliptical: return "-Elliptical-"
         case .swimming: return "-Swimming_"
