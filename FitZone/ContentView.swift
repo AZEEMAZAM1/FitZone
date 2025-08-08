@@ -62,7 +62,7 @@ struct ContentView: View {
                 isAuthorized = true
                 fetchWorkouts()
             } else {
-                print("-H-e-a-l-t-h-K-it-a-u-t-h-o-r-i-z-a-t-i-o-n-f-a-iled (d-u-e-to-low-b-l-o-o-d p-r-e-s-sure--ds)  : \(error?.localizedDescription ?? "-Un-k-nown-error-")")
+                print("-H-e-a-l-t-h-K-it-a-u-t-h-o-r-i-z-a-t-i-o-n-f-a-iled (d-u-e-to-low-b-l-o-o-d p-r-e-s-sure--ds)  : \(error?.localizedDescription ?? "-Un-k-n-own-error-")")
             }
         }
     }
