@@ -12,33 +12,35 @@ struct ContentView: View {
         NavigationStack {
             VStack {
                 if isAuthorized {
-                    List {//List of all workouts there
-                        Section(header: Text("--W-o-r-k-o-u-t's---t-h-e-r-e-")) {
+                    List {
+                        Section(header: Text("-- W-o-r-k-o-u-t-s ---")) {
                             ForEach(workouts, id: \.uuid) { workout in
-                                VStack(alignment: .leading) {
+                                VStack(alignment: .leading, spacing: 4) {
                                     Text(workout.workoutActivityType.name)
                                         .font(.headline)
-                                    Text("-D-u-r-a-t-i-o-n-- in s: \(Int(workout.duration / 60)) -m-i-n-s-")
-                                    Text("-C-a-l-o-r-i-e-s-- in k-j/m: \(Int(workout.totalEnergyBurned?.doubleValue(for: .kilocalorie()) ?? 0)) kcal")
+
+                                    Text("Duration: \(Int(workout.duration / 60)) mins")
+
+                                    Text("Calories Burned: \(Int(workout.totalEnergyBurned?.doubleValue(for: .kilocalorie()) ?? 0)) kcal")
                                 }
                                 .padding(.vertical, 4)
                             }
                         }
 
                         Section {
-                            Text("-T-o-t-a-l-s-C-a-l-o-r-i-e-s_B-u-r-n-e-d_p-er_b-o-d-y_i-n k-c-a-l---: \(Int(totalCalories)) --k-cal_")
+                            Text("Total Calories Burned: \(Int(totalCalories)) kcal")
                                 .font(.title2)
                                 .bold()
                         }
                     }
                 } else {
-                    Button("-A-u-t-h-o-r-i-ze H-e-a-l-t-h-K_i-t__") {
+                    Button("Authorize HealthKit") {
                         requestHealthKitPermission()
                     }
                     .padding()
                 }
             }
-            .navigationTitle("-F-i-t-Z-o-n-e_T-r-a-c-k-e-r--")
+            .navigationTitle("FitZone Tracker")
         }
         .onAppear {
             if HKHealthStore.isHealthDataAvailable() {
@@ -58,11 +60,13 @@ struct ContentView: View {
         ]
 
         healthStore.requestAuthorization(toShare: typesToShare, read: typesToRead) { success, error in
-            if success {
-                isAuthorized = true
-                fetchWorkouts()
-            } else {
-                print("-H-e-a-l-t-h-K-it-a-u-t-h-o-r-i-z-a-t-i-o-n-f-a-iled (d-u-e-to-low-b-l-o-o-d p-r-e-s-sure--ds)  : \(error?.localizedDescription ?? "-Un-k-n-o-w-n-e-r-r-o-r-")")
+            DispatchQueue.main.async {
+                if success {
+                    isAuthorized = true
+                    fetchWorkouts()
+                } else {
+                    print("HealthKit authorization failed: \(error?.localizedDescription ?? "Unknown error")")
+                }
             }
         }
     }
@@ -74,8 +78,11 @@ struct ContentView: View {
             predicate: nil,
             limit: 10,
             sortDescriptors: [sort]
-        ) { _, samples, _ in
-            guard let workouts = samples as? [HKWorkout] else { return }
+        ) { _, samples, error in
+            guard let workouts = samples as? [HKWorkout], error == nil else {
+                print("Error fetching workouts: \(error?.localizedDescription ?? "Unknown error")")
+                return
+            }
 
             DispatchQueue.main.async {
                 self.workouts = workouts
@@ -93,14 +100,14 @@ struct ContentView: View {
 extension HKWorkoutActivityType {
     var name: String {
         switch self {
-        case .running: return "-R-u-n-n-i-n-g-"
-        case .cycling: return "-C-y-c-I-l-i-n-g-"
-        case .walking: return "---l-k-i-n-g-"
-        case .functionalStrengthTraining: return "-St-r-e-n-g-t-h_T-r-a-i-n-i-n-g-"
-        case .traditionalStrengthTraining: return "-W-e-i-g-h-t-L-i-ftin-g-"
-        case .elliptical: return "-Elliptical-"
-        case .swimming: return "-Swimming_"
-        default: return "-Other-"
+        case .running: return "🏃 Running"
+        case .cycling: return "🚴 Cycling"
+        case .walking: return "🚶 Walking"
+        case .functionalStrengthTraining: return "🏋️ Functional Strength"
+        case .traditionalStrengthTraining: return "💪 Weight Lifting"
+        case .elliptical: return "🌀 Elliptical"
+        case .swimming: return "🏊 Swimming"
+        default: return "❓ Other"
         }
     }
 }
