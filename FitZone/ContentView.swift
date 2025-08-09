@@ -102,7 +102,7 @@ extension HKWorkoutActivityType {
         switch self {
         case .running: return "🏃 Running, singing"
         case .cycling: return "🚴 Cycling, eating"
-        case .walking: return "🚶 Walking"
+        case .walking: return "🚶 Walking, dancing"
         case .functionalStrengthTraining: return "🏋️ Functional Strength"
         case .traditionalStrengthTraining: return "💪 Weight Lifting"
         case .elliptical: return "🌀 Elliptical"
