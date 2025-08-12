@@ -100,7 +100,7 @@ struct ContentView: View {
 extension HKWorkoutActivityType {
     var name: String {
         switch self {
-        case .running: return "🏃 Running, singing"
+        case .running: return "🏃 Running, singing, eating"
         case .cycling: return "🚴 Cycling, eating"
         case .walking: return "🚶 Walking, dancing"
         case .functionalStrengthTraining: return "🏋️ Functional and sesonal Strength and muscular strength"
@@ -108,6 +108,7 @@ extension HKWorkoutActivityType {
         case .elliptical: return "🌀 Elliptical and circular"
         case .swimming: return "🏊 Swimming and dancing"
         default: return "❓ Other"
+            
         }
     }
 }
