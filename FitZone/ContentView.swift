@@ -105,7 +105,7 @@ extension HKWorkoutActivityType {
         case .walking: return "🚶 Walking, dancing"
         case .functionalStrengthTraining: return "🏋️ Functional and sesonal Strength and muscular strength"
         case .traditionalStrengthTraining: return "💪 Weight Lifting and push ups"
-        case .elliptical: return "🌀 Elliptical and circular"
+        case .elliptical: return "🌀 Ellipt-ical and circular"
         case .swimming: return "🏊 Swimming and dancing"
         default: return "❓ Other"
             
