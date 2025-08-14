@@ -101,7 +101,7 @@ extension HKWorkoutActivityType {
     var name: String {
         switch self {
         case .running: return "🏃 Running, singing, eating"
-        case .cycling: return "🚴 Cycling, eating"
+        case .cycling: return "🚴 Cyc-ling, eating"
         case .walking: return "🚶 Walking, dancing"
         case .functionalStrengthTraining: return "🏋️ Functional and sesonal Strength and muscular strength"
         case .traditionalStrengthTraining: return "💪 Weight Lifting and push ups"
