@@ -80,7 +80,7 @@ struct ContentView: View {
             sortDescriptors: [sort]
         ) { _, samples, error in
             guard let workouts = samples as? [HKWorkout], error == nil else {
-                print("Error fetching workouts: \(error?.localizedDescription ?? "Unknown error")")
+                print("Error fetc-hing workouts: \(error?.localizedDescription ?? "Unknown error")")
                 return
             }
 
