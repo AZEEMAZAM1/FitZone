@@ -96,6 +96,60 @@ struct ContentView: View {
     }
 }
 
+// MARK: - Extra Helper Functions
+extension ContentView {
+    
+    /// Fetch total calories burned today only
+    func fetchTodayCalories() {
+        guard let energyType = HKQuantityType.quantityType(forIdentifier: .activeEnergyBurned) else { return }
+
+        let startOfDay = Calendar.current.startOfDay(for: Date())
+        let predicate = HKQuery.predicateForSamples(withStart: startOfDay, end: Date())
+
+        let query = HKStatisticsQuery(
+            quantityType: energyType,
+            quantitySamplePredicate: predicate,
+            options: .cumulativeSum
+        ) { _, result, error in
+            guard let result = result, let sum = result.sumQuantity() else {
+                print("Error fetching today's calories: \(error?.localizedDescription ?? "Unknown error")")
+                return
+            }
+
+            DispatchQueue.main.async {
+                let todayCalories = sum.doubleValue(for: .kilocalorie())
+                print("🔥 Calories burned today: \(Int(todayCalories)) kcal")
+            }
+        }
+
+        healthStore.execute(query)
+    }
+    
+    /// Calculate average calories burned per workout
+    func averageCalories() -> Double {
+        guard !workouts.isEmpty else { return 0 }
+        return totalCalories / Double(workouts.count)
+    }
+    
+    /// Find the most frequent workout type
+    func mostFrequentWorkout() -> String {
+        let counts = workouts.reduce(into: [HKWorkoutActivityType: Int]()) { dict, workout in
+            dict[workout.workoutActivityType, default: 0] += 1
+        }
+        if let mostFrequent = counts.max(by: { $0.value < $1.value })?.key {
+            return mostFrequent.name
+        }
+        return "No Workouts"
+    }
+    
+    /// Reset stored workout data
+    func resetData() {
+        workouts.removeAll()
+        totalCalories = 0
+    }
+}
+
+
 // MARK: - Extension for Workout Name
 extension HKWorkoutActivityType {
     var name: String {
