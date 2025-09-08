@@ -154,7 +154,7 @@ extension ContentView {
 extension HKWorkoutActivityType {
     var name: String {
         switch self {
-        case .running: return "🏃 Run-ni-ng, sing--ing, ea-t-ing"
+        case .running: return "🏃 Running, singing, eating"
         case .cycling: return "🚴 Cyc-ling, eat-ing"
         case .walking: return "🚶 W-alk-ing, dan-c-ing"
         case .functionalStrengthTraining: return "🏋️ Fu-nc-tio-nal a-nd ses-onal St-reng-th a-nd mus-cular str-ength"
