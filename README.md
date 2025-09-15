@@ -29,5 +29,5 @@ A single-page **task management app** built with SwiftUI and integrated with a *
 1. **Clone the repository**  
 
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/AZEEMAZAM1/FitZone
 cd TaskTango-LLaMA
