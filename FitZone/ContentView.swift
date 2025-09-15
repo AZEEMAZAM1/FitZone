@@ -1,193 +1,119 @@
 import SwiftUI
-import HealthKit
 
+// MARK: - Task Model
+struct Task: Identifiable {
+    let id = UUID()
+    var title: String
+    var category: String
+    var dueDate: Date
+}
+
+// MARK: - Main Content View
 struct ContentView: View {
-    // MARK: - State Variables
-    
-    /// Tracks if the user has authorized HealthKit access
-    @State private var isAuthorized = false
-    
-    /// Holds the list of fetched workouts from HealthKit
-    @State private var workouts: [HKWorkout] = []
-    
-    /// Stores the total calories burned across all workouts
-    @State private var totalCalories: Double = 0
-    
-    /// HealthKit store instance (used for queries and permissions)
-    let healthStore = HKHealthStore()
+    @State private var tasks: [Task] = []
+    @State private var newTaskTitle = ""
+    @State private var newTaskCategory = "Work"
+    @State private var newTaskDueDate = Date()
+    @State private var aiSuggestion = "AI suggestions will appear here."
 
-    // MARK: - Body
+    let categories = ["Work", "Personal", "Urgent", "Long-Term", "Misc"]
+
     var body: some View {
-        NavigationStack {
+        NavigationView {
             VStack {
-                if isAuthorized {
-                    // Show workout data if permission is granted
-                    List {
-                        // Section 1: Workouts
-                        Section(header: Text("Workouts")) {
-                            ForEach(workouts, id: \.uuid) { workout in
-                                VStack(alignment: .leading, spacing: 4) {
-                                    // Workout type (Running, Walking, Cycling, etc.)
-                                    Text(workout.workoutActivityType.name)
-                                        .font(.headline)
-
-                                    // Duration in minutes
-                                    Text("Duration: \(Int(workout.duration / 60)) mins")
-
-                                    // Calories burned in kcal
-                                    Text("Calories Burned: \(Int(workout.totalEnergyBurned?.doubleValue(for: .kilocalorie()) ?? 0)) kcal")
-                                }
-                                .padding(.vertical, 4)
+                Form {
+                    Section(header: Text("Add New Task")) {
+                        TextField("Task Title", text: $newTaskTitle)
+                        Picker("Category", selection: $newTaskCategory) {
+                            ForEach(categories, id: \.self) { category in
+                                Text(category)
                             }
                         }
+                        DatePicker("Due-Date", selection: $newTaskDueDate, displayedComponents: .date)
+                        Button("Add Task") { addTask() }
+                    }
+                }
 
-                        // Section 2: Total Summary
-                        Section {
-                            Text("Total Calories Burned: \(Int(totalCalories)) kcal")
-                                .font(.title2)
-                                .bold()
+                List {
+                    ForEach(tasks) { task in
+                        VStack(alignment: .leading) {
+                            Text(task.title).font(.headline)
+                            Text("Category: \(task.category)").font(.subheadline)
+                            Text("Due: \(task.dueDate.formatted(date: .abbreviated, time: .omitted))")
+                                .font(.caption)
                         }
                     }
-                } else {
-                    // Show button if authorization not granted yet
-                    Button("Authorize HealthKit") {
-                        requestHealthKitPermission()
+                    .onDelete(perform: deleteTasks)
+                }
+
+                VStack(alignment: .leading) {
+                    Text("💡 AI Suggestions").bold()
+                    Text(aiSuggestion)
+                        .padding()
+                        .background(Color.gray.opacity(0.1))
+                        .cornerRadius(8)
+
+                    Button("Get AI Suggestions") {
+                        sendTasksToLLaMA()
                     }
-                    .padding()
+                    .padding(.top, 5)
                 }
+                .padding()
             }
-            .navigationTitle("FitZone Tracker")
+            .navigationTitle("TaskTango + LLaMA")
         }
-        .onAppear {
-            // Automatically request permission when app launches
-            if HKHealthStore.isHealthDataAvailable() {
-                requestHealthKitPermission()
+        .onAppear { loadMockTasks() }
+    }
+
+    // MARK: - Helper Functions
+    private func addTask() {
+        guard !newTaskTitle.isEmpty else { return }
+        let task = Task(title: newTaskTitle, category: newTaskCategory, dueDate: newTaskDueDate)
+        tasks.append(task)
+        newTaskTitle = ""
+    }
+
+    private func deleteTasks(at offsets: IndexSet) {
+        tasks.remove(atOffsets: offsets)
+    }
+
+    private func loadMockTasks() {
+        if tasks.isEmpty {
+            for i in 1...10 {
+                let category = categories.randomElement() ?? "Missc"
+                let task = Task(title: "Sample Task \(i)", category: category, dueDate: Date())
+                tasks.append(task)
             }
         }
     }
 
-    // MARK: - Request HealthKit Permission
-    func requestHealthKitPermission() {
-        // Data we want permission to write to HealthKit
-        let typesToShare: Set = [HKObjectType.workoutType()]
-        
-        // Data we want permission to read from HealthKit
-        let typesToRead: Set = [
-            HKObjectType.workoutType(),
-            HKObjectType.quantityType(forIdentifier: .activeEnergyBurned)!
-        ]
+    // MARK: - LLaMA Integration (API Call)
+    private func sendTasksToLLaMA() {
+        let taskTitles = tasks.map { $0.title }.joined(separator: ", ")
+        let prompt = "Categorize these tasks: \(taskTitles)"
 
-        // Request authorization
-        healthStore.requestAuthorization(toShare: typesToShare, read: typesToRead) { success, error in
-            DispatchQueue.main.async {
-                if success {
-                    isAuthorized = true
-                    fetchWorkouts() // Fetch workouts immediately after approval
-                } else {
-                    print("❌ HealthKit authorization failed: \(error?.localizedDescription ?? "Unknown error")")
-                }
+        guard let url = URL(string: "http://localhost:5000/llama") else { return }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        let body: [String: Any] = ["prompt": prompt, "max_tokens": 100]
+        request.httpBody = try? JSONSerialization.data(withJSONObject: body)
+
+        URLSession.shared.dataTask(with: request) { data, _, error in
+            guard let data = data else { return }
+            if let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+               let choices = json["choices"] as? [[String: Any]],
+               let text = choices.first?["text"] as? String {
+                DispatchQueue.main.async { aiSuggestion = text }
             }
-        }
-    }
-
-    // MARK: - Fetch Workouts
-    func fetchWorkouts() {
-        // Sort workouts by most recent
-        let sort = NSSortDescriptor(key: HKSampleSortIdentifierEndDate, ascending: false)
-        
-        // Query last 10 workouts
-        let query = HKSampleQuery(
-            sampleType: HKObjectType.workoutType(),
-            predicate: nil,
-            limit: 10,
-            sortDescriptors: [sort]
-        ) { _, samples, error in
-            guard let workouts = samples as? [HKWorkout], error == nil else {
-                print("❌ Error fetching workouts: \(error?.localizedDescription ?? "Unknown error")")
-                return
-            }
-
-            // Update UI with fetched data
-            DispatchQueue.main.async {
-                self.workouts = workouts
-                self.totalCalories = workouts.reduce(0) {
-                    $0 + ($1.totalEnergyBurned?.doubleValue(for: .kilocalorie()) ?? 0)
-                }
-            }
-        }
-
-        healthStore.execute(query)
+        }.resume()
     }
 }
 
-// MARK: - Extra Helper Functions
-extension ContentView {
-    
-    /// Fetch total calories burned today only (from midnight to now)
-    func fetchTodayCalories() {
-        guard let energyType = HKQuantityType.quantityType(forIdentifier: .activeEnergyBurned) else { return }
-
-        // Start of current day (e.g., 12:00 AM)
-        let startOfDay = Calendar.current.startOfDay(for: Date())
-        let predicate = HKQuery.predicateForSamples(withStart: startOfDay, end: Date())
-
-        // Query for calories burned today
-        let query = HKStatisticsQuery(
-            quantityType: energyType,
-            quantitySamplePredicate: predicate,
-            options: .cumulativeSum
-        ) { _, result, error in
-            guard let result = result, let sum = result.sumQuantity() else {
-                print("❌ Error fetching today's calories: \(error?.localizedDescription ?? "Unknown error")")
-                return
-            }
-
-            DispatchQueue.main.async {
-                let todayCalories = sum.doubleValue(for: .kilocalorie())
-                print("🔥 Calories burned today: \(Int(todayCalories)) kcal")
-            }
-        }
-
-        healthStore.execute(query)
-    }
-    
-    /// Calculate average calories burned per workout
-    func averageCalories() -> Double {
-        guard !workouts.isEmpty else { return 0 }
-        return totalCalories / Double(workouts.count)
-    }
-    
-    /// Find the most frequently performed workout type
-    func mostFrequentWorkout() -> String {
-        let counts = workouts.reduce(into: [HKWorkoutActivityType: Int]()) { dict, workout in
-            dict[workout.workoutActivityType, default: 0] += 1
-        }
-        if let mostFrequent = counts.max(by: { $0.value < $1.value })?.key {
-            return mostFrequent.name
-        }
-        return "No Workouts"
-    }
-    
-    /// Reset stored workout data (useful for testing or refreshing)
-    func resetData() {
-        workouts.removeAll()
-        totalCalories = 0
-    }
-}
-
-// MARK: - Extension for User-Friendly Workout Names
-extension HKWorkoutActivityType {
-    /// Converts workout types into emojis + readable names
-    var name: String {
-        switch self {
-        case .running: return "🏃 Running"
-        case .cycling: return "🚴 Cycling"
-        case .walking: return "🚶 Walking"
-        case .functionalStrengthTraining: return "🏋️ Functional Strength Training"
-        case .traditionalStrengthTraining: return "💪 Traditional Strength Training"
-        case .elliptical: return "🌀 Elliptical"
-        case .swimming: return "🏊 Swimming"
-        default: return "❓ Other"
-        }
+// MARK: - Preview
+struct ContentView_Previews: PreviewProvider {
+    static var previews: some View {
+        ContentView()
     }
 }
