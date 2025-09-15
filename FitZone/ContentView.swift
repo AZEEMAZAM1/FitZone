@@ -74,7 +74,7 @@ struct ContentView: View {
 
                 // MARK: - AI Suggestions
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("💡 AI Suggestions")
+                    Text("💡 AI related Suggestions")
                         .font(.headline)
                         .foregroundColor(.purple)
 
