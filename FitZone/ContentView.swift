@@ -23,7 +23,7 @@ struct ContentView: View {
             VStack {
                 // MARK: - Task Form
                 Form {
-                    Section(header: Text("➕ :Add New Task").foregroundColor(.blue)) {
+                    Section(header: Text("➕ :)Add New Task").foregroundColor(.blue)) {
                         TextField("Task Title", text: $newTaskTitle)
 
                         Picker("Category", selection: $newTaskCategory) {
