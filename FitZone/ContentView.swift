@@ -1,6 +1,7 @@
 import SwiftUI
 
 // MARK: - Task Model
+
 struct Task: Identifiable {
     let id = UUID()
     var title: String
@@ -97,6 +98,17 @@ struct ContentView: View {
                 .padding()
             }
             .navigationTitle("✨ TaskTango + LLaMA")
+            .toolbar {
+                ToolbarItem {
+                    NavigationLink(destination: ChatBotView()) {
+                        Image(systemName: "message.fill")
+                            .foregroundColor(.purple)
+                    }
+                }
+            }
+
+
+
             .background(Color.gray.opacity(0.1).ignoresSafeArea()) // ✅ macOS friendly
         }
         .onAppear { loadMockTasks() }

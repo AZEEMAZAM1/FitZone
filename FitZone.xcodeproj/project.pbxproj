@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CE74709C2E7954AA00BFA3AC /* ChatBotView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE74709B2E7954AA00BFA3AC /* ChatBotView.swift */; };
 		CE8D32342DF799020063BD4C /* FitZoneApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE8D32332DF799020063BD4C /* FitZoneApp.swift */; };
 		CE8D32362DF799020063BD4C /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE8D32352DF799020063BD4C /* Persistence.swift */; };
 		CE8D32392DF799020063BD4C /* FitZone.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = CE8D32372DF799020063BD4C /* FitZone.xcdatamodeld */; };
@@ -16,6 +17,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		CE74709B2E7954AA00BFA3AC /* ChatBotView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatBotView.swift; sourceTree = "<group>"; };
 		CE8D32302DF799020063BD4C /* FitZone.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FitZone.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE8D32332DF799020063BD4C /* FitZoneApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FitZoneApp.swift; sourceTree = "<group>"; };
 		CE8D32352DF799020063BD4C /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
@@ -40,6 +42,7 @@
 		CE8D32272DF799020063BD4C = {
 			isa = PBXGroup;
 			children = (
+				CE74709B2E7954AA00BFA3AC /* ChatBotView.swift */,
 				CE8D32322DF799020063BD4C /* FitZone */,
 				CE8D32312DF799020063BD4C /* Products */,
 			);
@@ -146,6 +149,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CE8D32342DF799020063BD4C /* FitZoneApp.swift in Sources */,
+				CE74709C2E7954AA00BFA3AC /* ChatBotView.swift in Sources */,
 				CE8D32362DF799020063BD4C /* Persistence.swift in Sources */,
 				CE8D323B2DF799020063BD4C /* ContentView.swift in Sources */,
 				CE8D32392DF799020063BD4C /* FitZone.xcdatamodeld in Sources */,
